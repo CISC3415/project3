@@ -1,14 +1,21 @@
-/**
- * laser-roomba.cc
- * 
- * Sample code for a robot that has two front bumpers and a laser scanner.
- * Suitable for use with the roomba.
+/*
+ *  CISC-3415 Robotics
+ *  Project 3 - Part 2
+ *  Date: 20th October 2019
+ *  Credit To: Simon Parsons
  *
- * Written by: Simon Parsons
- * Date:       11th October 2011
- *  
- **/
-
+ ** Group Members *************************************************************
+ *    
+ *  Benjamin Yi
+ *  Emmanuel Desdunes
+ *  Montasir Omi
+ *  Shahzad Ahmad
+ *
+ ** Description ***************************************************************
+ * 
+ *  A program which instructs a simulated robot to navigate a simulated
+ *  maze by only using laser sensors.
+ */
 
 #include <iostream>
 #include <libplayerc++/playerc++.h>
