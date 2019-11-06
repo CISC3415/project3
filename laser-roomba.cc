@@ -53,54 +53,46 @@ int main(int argc, char *argv[])
       // Update information from the robot.
       robot.Read();
 
-     // std::cout << sp.RangeCount() << std::endl;
-
       // Print information about the laser. Check the counter first to stop
       // problems on startup
       if(counter > 2){
 	printLaserData(sp);
       }
-      
-      // STOP #1
-      // Full length of the maze is about 385 iterations
-      // This is the end of the maze if the robot location
-      // was not tampered with.
-      if (counter >= 385) {
-        pp.SetSpeed(0.0, 0.0);
-        break;
-      } 
 
-/*
-      // STOP #2
-      // Calculate the distance of left + right;
-      double maxdist = sp.MinLeft() + sp.MinRight();  
-
-      // If the distance is smaller than some X, we are
-      // close to the final wall, so stop.
-      if (maxdist > 0 && maxdist < 1.5) {
-        pp.SetSpeed(0.0, 0.0);
-        break;
-      }
-*/
-      
       // Print data on the robot to the terminal
       printRobotData(bp);
       
       // If either bumper is pressed, stop. Otherwise just go forwards
-
       if(bp[0] || bp[1]){
 	speed= 0;
 	turnrate= 0;
-      } 
-      else {
-	speed=1.0;
+      }  else {
+        double totaldist = sp.MinLeft() + sp.MinRight(); 
         
-        // Try to stay evenly in the middle by turned towards
-        // the further wall.
-        if (sp.MinLeft() < sp.MinRight()) {
-          turnrate = -0.8;
+        // If distance of LEFT+RIGHT is less than 0.8, we are right
+        // in front of a wall, so STOP HERE!
+        if (totaldist > 0 && totaldist < 0.8) {
+          turnrate = 0.0;
+          speed = 0.0;
+        // If distance of LEFT+RIGHT is less than 2.1, we are close
+        // to the wall, so swap turnrates and SLOW DOWN!
+        // (This prevents circular motion at the goal zone) 
+        } else if (totaldist > 0 && totaldist < 2.1) {
+          speed = 0.5;
+          if (sp.MinLeft() < sp.MinRight()) {
+            turnrate = 0.8;
+          } else {
+            turnrate = -0.8;
+          }
+        // If there are no limiations, stay evenly in the middle
+        // by turning TOWARDS the further wall and closing the gap.
         } else {
-          turnrate = 0.8;
+          speed = 1.0;
+          if (sp.MinLeft() < sp.MinRight()) {
+            turnrate = -0.8;
+          } else {
+            turnrate = 0.8;
+          }
         }
       }     
 
